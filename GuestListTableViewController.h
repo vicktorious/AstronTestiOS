@@ -11,9 +11,9 @@
 
 @interface GuestListTableViewController : UITableViewController<UITableViewDataSource,UITableViewDelegate>
     @property (weak, nonatomic, readwrite) IBOutlet UITableView *tv;
-    @property (nonatomic, readwrite) NSMutableArray *people;
 @end
 
+// The Cell contains 2 ImageViews for the AgeGroup defined icons and a label for presenting the name
 @interface PersonCell : UITableViewCell
     @property (weak, nonatomic) IBOutlet UIImageView *leftImageView;
     @property (weak, nonatomic) IBOutlet UILabel *nameLabel;

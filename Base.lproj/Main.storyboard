@@ -6,6 +6,7 @@
     <dependencies>
         <deployment identifier="iOS"/>
         <plugIn identifier="com.apple.InterfaceBuilder.IBCocoaTouchPlugin" version="11757"/>
+        <capability name="Constraints to layout margins" minToolsVersion="6.0"/>
         <capability name="documents saved in the Xcode 8 format" minToolsVersion="8.0"/>
     </dependencies>
     <scenes>
@@ -21,20 +22,33 @@
                         <rect key="frame" x="0.0" y="0.0" width="320" height="568"/>
                         <autoresizingMask key="autoresizingMask" widthSizable="YES" heightSizable="YES"/>
                         <subviews>
-                            <imageView userInteractionEnabled="NO" contentMode="scaleToFill" horizontalHuggingPriority="251" verticalHuggingPriority="251" fixedFrame="YES" image="PieChart" translatesAutoresizingMaskIntoConstraints="NO" id="uUv-iv-Y8z">
-                                <rect key="frame" x="40" y="220" width="240" height="128"/>
-                                <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMaxY="YES"/>
-                            </imageView>
+                            <view contentMode="scaleToFill" translatesAutoresizingMaskIntoConstraints="NO" id="8TM-Iq-fOb">
+                                <rect key="frame" x="16" y="64" width="288" height="455"/>
+                                <color key="backgroundColor" white="1" alpha="1" colorSpace="calibratedWhite"/>
+                            </view>
                         </subviews>
                         <color key="backgroundColor" white="1" alpha="1" colorSpace="calibratedWhite"/>
+                        <constraints>
+                            <constraint firstItem="8TM-Iq-fOb" firstAttribute="top" secondItem="wqO-ym-joh" secondAttribute="bottom" id="4u5-v5-Pi5"/>
+                            <constraint firstAttribute="trailingMargin" secondItem="8TM-Iq-fOb" secondAttribute="trailing" id="H3N-LI-pAn"/>
+                            <constraint firstItem="4Vb-A4-5pU" firstAttribute="top" secondItem="8TM-Iq-fOb" secondAttribute="bottom" id="Z2w-XH-FTb"/>
+                            <constraint firstItem="8TM-Iq-fOb" firstAttribute="leading" secondItem="4xL-qj-otj" secondAttribute="leadingMargin" id="wh5-W9-xD9"/>
+                        </constraints>
                     </view>
                     <navigationItem key="navigationItem" title="Pie Chart" id="7VL-Kb-8uA">
-                        <barButtonItem key="rightBarButtonItem" systemItem="refresh" id="0I6-rl-tpA"/>
+                        <barButtonItem key="rightBarButtonItem" systemItem="play" id="0I6-rl-tpA">
+                            <connections>
+                                <action selector="refresh:" destination="cXu-Ze-Wqv" id="t1e-0g-iqO"/>
+                            </connections>
+                        </barButtonItem>
                     </navigationItem>
+                    <connections>
+                        <outlet property="pieCanvasView" destination="8TM-Iq-fOb" id="uPX-TO-80i"/>
+                    </connections>
                 </viewController>
                 <placeholder placeholderIdentifier="IBFirstResponder" id="clc-wQ-038" userLabel="First Responder" sceneMemberID="firstResponder"/>
             </objects>
-            <point key="canvasLocation" x="1482.4000000000001" y="317.99100449775113"/>
+            <point key="canvasLocation" x="1481.25" y="317.95774647887322"/>
         </scene>
         <!--Guest List-->
         <scene sceneID="Nnz-h3-pan">

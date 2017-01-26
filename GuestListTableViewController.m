@@ -8,6 +8,7 @@
 
 #import "GuestListTableViewController.h"
 
+// Implementation of the Prototype Cells
 @interface PersonCell()
 
 @end
@@ -16,16 +17,17 @@
 
 @end
 
-
+// Implemetation of the TableViewController
 @interface GuestListTableViewController ()<UITableViewDataSource,UITableViewDelegate>
 
 @end
 
+
+NSMutableArray *people;
+
 @implementation GuestListTableViewController
 
-@synthesize tv,people;
-
-    NSMutableArray *people;
+@synthesize tv;
 
 - (void)viewDidLoad {
     [super viewDidLoad];
@@ -79,7 +81,7 @@
         
             NSArray* message = [NSJSONSerialization JSONObjectWithData:data options:NSJSONReadingAllowFragments error:NULL];
         
-            self.people = [[NSMutableArray alloc] initWithCapacity:[message count]];
+            people = [[NSMutableArray alloc] initWithCapacity:[message count]];
         
             for (NSDictionary* msg in message) {
                 
@@ -89,17 +91,17 @@
                 newPerson.lastName = name[@"lastname"];
                 newPerson.gender = msg[@"gender"];
                 newPerson.age = [msg[@"age"] doubleValue];
-                [self.people addObject:newPerson];
+                [people addObject:newPerson];
             }
         
             NSArray *sortedArray;
-            sortedArray = [self.people sortedArrayUsingComparator:^NSComparisonResult(id a, id b) {
+            sortedArray = [people sortedArrayUsingComparator:^NSComparisonResult(id a, id b) {
                 NSString *first = [(Person*)a lastName];
                 NSString *second = [(Person*)b lastName];
                 return [first compare:second];
             }];
         
-            self.people = [sortedArray mutableCopy];
+            people = [sortedArray mutableCopy];
         
             [self.tv reloadData];
         }];
