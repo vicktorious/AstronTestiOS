@@ -15,19 +15,55 @@
 
 @implementation PieChart
 
-@synthesize sliceNum,slices;
+@synthesize studentSlice, workerSlice, retiredSlice;
 
 -(id)init {
     self = [super init];
-    sliceNum = 0;
-    double t[CATEGORY_NUM];
-    slices = t;
+    studentSlice = 0;
+    workerSlice = 0;
+    retiredSlice = 0;
     return self;
 }
 
 -(void)drawRect:(CGRect)rect {
     [super drawRect:rect];
-    printf("%s",@"A");
+    
+    CGContextRef ctx = UIGraphicsGetCurrentContext();
+    float radius = rect.size.height > rect.size.width ? rect.size.width / 2 : rect.size.height / 2;
+    CGPoint center = CGPointMake(rect.size.width / 2, rect.size.height / 2);
+    
+    float startAngle = 0;
+    float endAngle = self.studentSlice;
+    
+    CGContextSetFillColorWithColor(ctx, [[UIColor redColor] CGColor]);
+    CGContextMoveToPoint(ctx, center.x, center.y);
+    CGContextAddArc(ctx, center.x, center.y, radius, startAngle, endAngle, false);
+    CGContextFillPath(ctx);
+    
+    startAngle = endAngle;
+    endAngle = startAngle + self.workerSlice;
+    
+    CGContextSetFillColorWithColor(ctx, [[UIColor greenColor] CGColor]);
+    CGContextMoveToPoint(ctx, center.x, center.y);
+    CGContextAddArc(ctx, center.x, center.y, radius, startAngle, endAngle, false);
+    CGContextFillPath(ctx);
+    
+    startAngle = endAngle;
+    endAngle = startAngle + self.retiredSlice;
+    
+    CGContextSetFillColorWithColor(ctx, [[UIColor yellowColor] CGColor]);
+    CGContextMoveToPoint(ctx, center.x, center.y);
+    CGContextAddArc(ctx, center.x, center.y, radius, startAngle, endAngle, false);
+    CGContextFillPath(ctx);
+    
+    CABasicAnimation* rotationAnimation;
+    rotationAnimation = [CABasicAnimation animationWithKeyPath:@"transform.rotation.z"];
+    rotationAnimation.toValue = [NSNumber numberWithFloat: M_PI * 2.0];
+    rotationAnimation.duration = 0.5;
+    rotationAnimation.cumulative = YES;
+    rotationAnimation.repeatCount = 1;
+    
+    [self.layer addAnimation:rotationAnimation forKey:@"rotationAnimation"];
 }
 
 @end
@@ -89,9 +125,11 @@
         }
     }
     
-    float studentAngle = 360 * studentCount / people.count;
-    int workerAngle = 360 * workerCount / people.count;
-    int retiredAngle = 360 - studentAngle - workerAngle;
+    
+    float pi = M_PI;
+    float studentAngle = 2 * pi * studentCount / people.count;
+    float workerAngle = 2 * pi * workerCount / people.count;
+    float retiredAngle = 2 * pi - studentAngle - workerAngle;
     
     PieChart *pC = [[PieChart alloc]  init];
     
@@ -100,10 +138,9 @@
     pC.frame = r;
     pC.backgroundColor = UIColor.whiteColor;
     
-    pC.sliceNum = CATEGORY_NUM;
-    pC.slices[0] = studentAngle;
-    pC.slices[1] = workerAngle;
-    pC.slices[2] = retiredAngle;
+    pC.studentSlice = studentAngle;
+    pC.workerSlice = workerAngle;
+    pC.retiredSlice = retiredAngle;
     
     [self.pieCanvasView.subviews makeObjectsPerformSelector:@selector(removeFromSuperview)];
     [self.pieCanvasView addSubview:pC];
