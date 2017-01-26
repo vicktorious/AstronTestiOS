@@ -7,7 +7,15 @@
 //
 
 #import <UIKit/UIKit.h>
+#import "Person.h"
 
-@interface GuestListTableViewController : UITableViewController
+@interface GuestListTableViewController : UITableViewController<UITableViewDataSource,UITableViewDelegate>
+    @property (weak, nonatomic, readwrite) IBOutlet UITableView *tv;
+    @property (nonatomic, readwrite) NSMutableArray *people;
+@end
 
+@interface PersonCell : UITableViewCell
+    @property (weak, nonatomic) IBOutlet UIImageView *leftImageView;
+    @property (weak, nonatomic) IBOutlet UILabel *nameLabel;
+    @property (weak, nonatomic) IBOutlet UIImageView *rightImageView;
 @end

@@ -45,7 +45,7 @@
                         <autoresizingMask key="autoresizingMask" widthSizable="YES" heightSizable="YES"/>
                         <color key="backgroundColor" white="1" alpha="1" colorSpace="calibratedWhite"/>
                         <prototypes>
-                            <tableViewCell clipsSubviews="YES" contentMode="scaleToFill" selectionStyle="default" indentationWidth="10" rowHeight="48" id="mTZ-ez-bKY">
+                            <tableViewCell clipsSubviews="YES" contentMode="scaleToFill" selectionStyle="default" indentationWidth="10" reuseIdentifier="PersonCell" rowHeight="48" id="mTZ-ez-bKY" customClass="PersonCell">
                                 <rect key="frame" x="0.0" y="28" width="320" height="48"/>
                                 <autoresizingMask key="autoresizingMask"/>
                                 <tableViewCellContentView key="contentView" opaque="NO" clipsSubviews="YES" multipleTouchEnabled="YES" contentMode="center" tableViewCell="mTZ-ez-bKY" id="ubb-02-ARo">
@@ -74,6 +74,11 @@
                                         <constraint firstItem="T8z-WE-qGM" firstAttribute="centerX" secondItem="ubb-02-ARo" secondAttribute="centerX" id="psd-nl-Qj6"/>
                                     </constraints>
                                 </tableViewCellContentView>
+                                <connections>
+                                    <outlet property="leftImageView" destination="9HM-IX-5z2" id="t57-1T-xHf"/>
+                                    <outlet property="nameLabel" destination="T8z-WE-qGM" id="Q0X-xy-PQx"/>
+                                    <outlet property="rightImageView" destination="Xf9-DK-2eM" id="hFG-gc-4BY"/>
+                                </connections>
                             </tableViewCell>
                         </prototypes>
                         <connections>
@@ -82,8 +87,15 @@
                         </connections>
                     </tableView>
                     <navigationItem key="navigationItem" title="Guest List" id="NYj-p6-Riw">
-                        <barButtonItem key="rightBarButtonItem" systemItem="refresh" id="l7c-Df-61L"/>
+                        <barButtonItem key="rightBarButtonItem" systemItem="refresh" id="l7c-Df-61L">
+                            <connections>
+                                <action selector="refresh:" destination="4fW-oj-HRB" id="PEQ-Xb-9yB"/>
+                            </connections>
+                        </barButtonItem>
                     </navigationItem>
+                    <connections>
+                        <outlet property="tv" destination="7Ip-dT-RFd" id="FbN-ov-vjA"/>
+                    </connections>
                 </tableViewController>
                 <placeholder placeholderIdentifier="IBFirstResponder" id="xgs-0T-EMr" userLabel="First Responder" sceneMemberID="firstResponder"/>
             </objects>

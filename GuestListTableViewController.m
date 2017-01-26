@@ -8,20 +8,31 @@
 
 #import "GuestListTableViewController.h"
 
-@interface GuestListTableViewController ()
+@interface PersonCell()
+
+@end
+
+@implementation PersonCell
+
+@end
+
+
+@interface GuestListTableViewController ()<UITableViewDataSource,UITableViewDelegate>
 
 @end
 
 @implementation GuestListTableViewController
 
+@synthesize tv,people;
+
+    NSMutableArray *people;
+
 - (void)viewDidLoad {
     [super viewDidLoad];
     
-    // Uncomment the following line to preserve selection between presentations.
-    // self.clearsSelectionOnViewWillAppear = NO;
-    
-    // Uncomment the following line to display an Edit button in the navigation bar for this view controller.
-    // self.navigationItem.rightBarButtonItem = self.editButtonItem;
+    tv.delegate = self;
+    tv.dataSource = self;
+
 }
 
 - (void)didReceiveMemoryWarning {
@@ -32,58 +43,69 @@
 #pragma mark - Table view data source
 
 - (NSInteger)numberOfSectionsInTableView:(UITableView *)tableView {
-#warning Incomplete implementation, return the number of sections
-    return 0;
+    return 1;
 }
 
 - (NSInteger)tableView:(UITableView *)tableView numberOfRowsInSection:(NSInteger)section {
-#warning Incomplete implementation, return the number of rows
-    return 0;
+    return [people count];
 }
 
-/*
+- (void)tableView:(UITableView *)tableView didSelectRowAtIndexPath:(NSIndexPath *)indexPath {
+    [tv deselectRowAtIndexPath:indexPath animated:true];
+}
+
 - (UITableViewCell *)tableView:(UITableView *)tableView cellForRowAtIndexPath:(NSIndexPath *)indexPath {
-    UITableViewCell *cell = [tableView dequeueReusableCellWithIdentifier:<#@"reuseIdentifier"#> forIndexPath:indexPath];
+    UITableViewCell *cell = [tableView dequeueReusableCellWithIdentifier:@"PersonCell" forIndexPath:indexPath];
     
-    // Configure the cell...
+    PersonCell *pCell = (PersonCell*) cell;
     
-    return cell;
+    Person *p = people[indexPath.row];
+    NSString *ageGroup = p.age < 21 ? @"student" : (p.age > 60) ? @"retired" : @"worker";
+    
+    pCell.nameLabel.text = [[p.firstName stringByAppendingString:@" " ] stringByAppendingString:p.lastName];
+    [pCell.leftImageView setImage:([p.gender  isEqual: @"male"]) ? NULL : [UIImage imageNamed:ageGroup]];
+    [pCell.rightImageView setImage:([p.gender  isEqual: @"female"]) ? NULL : [UIImage imageNamed:ageGroup]];
+    
+    return pCell;
 }
-*/
 
-/*
-// Override to support conditional editing of the table view.
-- (BOOL)tableView:(UITableView *)tableView canEditRowAtIndexPath:(NSIndexPath *)indexPath {
-    // Return NO if you do not want the specified item to be editable.
-    return YES;
+- (IBAction)refresh:(id)sender {
+    
+    NSURL *url = [NSURL URLWithString:@"http://mash1.astron.hu:23985/recruiting/attendees"];
+    
+    NSURLSessionDataTask *downloadTask = [[NSURLSession sharedSession] dataTaskWithURL:url completionHandler:^(NSData *data, NSURLResponse *response, NSError *error) {
+            NSString *responseString = [[NSString alloc] initWithData:data encoding:NSUTF8StringEncoding];
+            printf("%s", [responseString cStringUsingEncoding:NSUTF8StringEncoding]);
+        
+            NSArray* message = [NSJSONSerialization JSONObjectWithData:data options:NSJSONReadingAllowFragments error:NULL];
+        
+            self.people = [[NSMutableArray alloc] initWithCapacity:[message count]];
+        
+            for (NSDictionary* msg in message) {
+                
+                Person *newPerson = [[Person alloc] init];
+                NSDictionary* name = msg[@"name"];
+                newPerson.firstName = name[@"firstname"];
+                newPerson.lastName = name[@"lastname"];
+                newPerson.gender = msg[@"gender"];
+                newPerson.age = [msg[@"age"] doubleValue];
+                [self.people addObject:newPerson];
+            }
+        
+            NSArray *sortedArray;
+            sortedArray = [self.people sortedArrayUsingComparator:^NSComparisonResult(id a, id b) {
+                NSString *first = [(Person*)a lastName];
+                NSString *second = [(Person*)b lastName];
+                return [first compare:second];
+            }];
+        
+            self.people = [sortedArray mutableCopy];
+        
+            [self.tv reloadData];
+        }];
+    
+    [downloadTask resume];
 }
-*/
-
-/*
-// Override to support editing the table view.
-- (void)tableView:(UITableView *)tableView commitEditingStyle:(UITableViewCellEditingStyle)editingStyle forRowAtIndexPath:(NSIndexPath *)indexPath {
-    if (editingStyle == UITableViewCellEditingStyleDelete) {
-        // Delete the row from the data source
-        [tableView deleteRowsAtIndexPaths:@[indexPath] withRowAnimation:UITableViewRowAnimationFade];
-    } else if (editingStyle == UITableViewCellEditingStyleInsert) {
-        // Create a new instance of the appropriate class, insert it into the array, and add a new row to the table view
-    }   
-}
-*/
-
-/*
-// Override to support rearranging the table view.
-- (void)tableView:(UITableView *)tableView moveRowAtIndexPath:(NSIndexPath *)fromIndexPath toIndexPath:(NSIndexPath *)toIndexPath {
-}
-*/
-
-/*
-// Override to support conditional rearranging of the table view.
-- (BOOL)tableView:(UITableView *)tableView canMoveRowAtIndexPath:(NSIndexPath *)indexPath {
-    // Return NO if you do not want the item to be re-orderable.
-    return YES;
-}
-*/
 
 /*
 #pragma mark - Navigation
